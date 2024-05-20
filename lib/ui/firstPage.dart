@@ -48,7 +48,8 @@ class _HomePageState extends State<HomePage> {
                 height: 122,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(16),
-                  color: const Color(0xff2F3035),
+                  color:
+                      const Color(0xff2F3035), // Background color for container
                 ),
                 width: double.infinity,
                 child: Padding(
@@ -58,7 +59,8 @@ class _HomePageState extends State<HomePage> {
                     height: 90,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(16),
-                      color: const Color(0xff3E3F43),
+                      color: const Color(
+                          0xff3E3F43), // Inner container background color
                     ),
                     child: Row(
                       children: [
@@ -122,7 +124,7 @@ class _HomePageState extends State<HomePage> {
               style: AppFonts.title1,
             ),
             SizedBox(
-              height: 250, // Adjust the height as needed
+              height: 270, // Adjust the height as needed
               child: BlocBuilder<FirstEnterBloc, FirstEnterState>(
                 builder: (context, state) {
                   if (state is FirstEnterLoading) {
@@ -133,11 +135,25 @@ class _HomePageState extends State<HomePage> {
                       itemCount: state.offers.length,
                       itemBuilder: (context, index) {
                         final offer = state.offers[index];
+                        final id = offer['id'] ?? 0;
                         final title = offer['title'] ?? "Unknown Title";
                         final town = offer['town'] ?? "Unknown Town";
                         final price = offer['price'] != null
                             ? (offer['price']['value'] ?? 0).toDouble()
                             : 0.0;
+
+                        // Determine the image based on the id
+                        String imagePath;
+                        if (id == 1) {
+                          imagePath =
+                              '/Users/r27/StudioProjects/travel_app/assets/images/girl.png';
+                        } else if (id == 2) {
+                          imagePath =
+                              '/Users/r27/StudioProjects/travel_app/assets/images/socrat-i-lera-600x600.png';
+                        } else {
+                          imagePath =
+                              '/Users/r27/StudioProjects/travel_app/assets/images/samara.png';
+                        }
 
                         return Padding(
                           padding: const EdgeInsets.only(right: 8.0),
@@ -145,6 +161,8 @@ class _HomePageState extends State<HomePage> {
                             title: title,
                             price: price,
                             town: town,
+                            imagePath:
+                                imagePath, // Pass the image path to the CardWidget
                           ),
                         );
                       },
