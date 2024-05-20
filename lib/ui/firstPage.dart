@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:travel_app/blocs/first_enter/first_enter_bloc.dart';
+import 'package:travel_app/blocs/selected_city/selected_city_bloc.dart';
 import 'package:travel_app/common_widgets/cardWidget.dart';
 import 'package:travel_app/common_widgets/modalSheetWidget.dart';
 import 'package:travel_app/resources/AppFonts.dart';
@@ -180,8 +181,10 @@ class HomePage extends StatelessWidget {
                     backgroundColor: const Color(0xff2F3035),
                   ),
                   onPressed: () {
-                    BlocProvider.of<FirstEnterBloc>(context)
-                        .add(ShowMainCardEvent());
+                    // BlocProvider.of<FirstEnterBloc>(context)
+                    //     .add(ShowMainCardEvent());
+                    BlocProvider.of<SelectedCityBloc>(context)
+                        .add(LoadSelectedCity());
                   },
                   child: const Text(
                     "Показать все места",

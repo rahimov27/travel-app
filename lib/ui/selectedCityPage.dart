@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:travel_app/blocs/selected_city/selected_city_bloc.dart';
 import 'package:travel_app/resources/AppFonts.dart';
 
 class SelectedCityPage extends StatelessWidget {
@@ -29,8 +31,7 @@ class SelectedCityPage extends StatelessWidget {
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        SvgPicture.asset(
-                            "/Users/r27/StudioProjects/travel_app/assets/images/arrow_back.svg"),
+                        SvgPicture.asset("assets/images/arrow_back.svg"),
                         Padding(
                           padding: const EdgeInsets.only(left: 8.0),
                           child: Column(
@@ -43,8 +44,7 @@ class SelectedCityPage extends StatelessWidget {
                                     child: TextField(
                                       inputFormatters: [
                                         FilteringTextInputFormatter.allow(
-                                          RegExp(
-                                              r'[а-яА-Я\s]'), // Only allow Cyrillic characters and whitespace
+                                          RegExp(r'[а-яА-Я\s]'),
                                         ),
                                       ],
                                       decoration: const InputDecoration(
@@ -53,8 +53,7 @@ class SelectedCityPage extends StatelessWidget {
                                       ),
                                     ),
                                   ),
-                                  SvgPicture.asset(
-                                      "/Users/r27/StudioProjects/travel_app/assets/images/filter.svg")
+                                  SvgPicture.asset("assets/images/filter.svg")
                                 ],
                               ),
                               Row(
@@ -68,8 +67,7 @@ class SelectedCityPage extends StatelessWidget {
                                         style: AppFonts.minsk,
                                         inputFormatters: [
                                           FilteringTextInputFormatter.allow(
-                                            RegExp(
-                                                r'[а-яА-Я\s]'), // Only allow Cyrillic characters and whitespace
+                                            RegExp(r'[а-яА-Я\s]'),
                                           ),
                                         ],
                                         decoration: const InputDecoration(
@@ -80,8 +78,7 @@ class SelectedCityPage extends StatelessWidget {
                                       ),
                                     ),
                                   ),
-                                  SvgPicture.asset(
-                                      "/Users/r27/StudioProjects/travel_app/assets/images/close.svg")
+                                  SvgPicture.asset("assets/images/close.svg")
                                 ],
                               ),
                             ],
@@ -110,8 +107,7 @@ class SelectedCityPage extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            SvgPicture.asset(
-                                "/Users/r27/StudioProjects/travel_app/assets/images/add.svg"),
+                            SvgPicture.asset("assets/images/add.svg"),
                             const Padding(
                               padding: EdgeInsets.symmetric(horizontal: 8),
                               child: Text(
@@ -160,8 +156,7 @@ class SelectedCityPage extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            SvgPicture.asset(
-                                "/Users/r27/StudioProjects/travel_app/assets/images/user.svg"),
+                            SvgPicture.asset("assets/images/user.svg"),
                             const Padding(
                               padding: EdgeInsets.symmetric(horizontal: 8),
                               child: Text(
@@ -186,8 +181,7 @@ class SelectedCityPage extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            SvgPicture.asset(
-                                "/Users/r27/StudioProjects/travel_app/assets/images/add.svg"),
+                            SvgPicture.asset("assets/images/add.svg"),
                             const Padding(
                               padding: EdgeInsets.symmetric(horizontal: 8),
                               child: Text(
@@ -203,69 +197,85 @@ class SelectedCityPage extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 12),
-              Container(
-                width: double.infinity,
-                height: 238,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(16),
-                  color: const Color(0xff1D1E20),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        "Прямые рельсы",
-                        style: AppFonts.title2,
+              BlocBuilder<SelectedCityBloc, SelectedCityState>(
+                builder: (context, state) {
+                  if (state is SelectedCityLoading) {
+                    return const CircularProgressIndicator();
+                  } else if (state is SelectedCitySuccess) {
+                    return Container(
+                      width: double.infinity,
+                      height: 238,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(16),
+                        color: const Color(0xff1D1E20),
                       ),
-                      const SizedBox(height: 8),
-                      Container(
-                        decoration: BoxDecoration(border: Border.symmetric()),
-                        child: const Row(
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            CircleAvatar(
-                              radius: 12,
-                              backgroundColor: Color(0xffFF5E5E),
+                            const Text(
+                              "Прямые рельсы",
+                              style: AppFonts.title2,
                             ),
-                            Padding(
-                              padding: EdgeInsets.only(left: 8.0),
-                              child: Column(
+                            const SizedBox(height: 8),
+                            Container(
+                              decoration: const BoxDecoration(
+                                border: Border.symmetric(),
+                              ),
+                              child: Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        "Уральские авиалинии",
-                                        style: AppFonts.title4,
-                                      ),
-                                      Padding(
-                                        padding: EdgeInsets.only(left: 125),
-                                        child: Text(
-                                          "2 390 ₽",
-                                          style: TextStyle(
-                                              color: Color(0xff2261BC),
-                                              fontStyle: FontStyle.italic),
+                                  const CircleAvatar(
+                                    radius: 12,
+                                    backgroundColor: Color(0xffFF5E5E),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 8.0),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              state.title,
+                                              style: AppFonts.title4,
+                                            ),
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  left: 125),
+                                              child: Text(
+                                                state.price,
+                                                style: const TextStyle(
+                                                  color: Color(0xff2261BC),
+                                                  fontStyle: FontStyle.italic,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
                                         ),
-                                      ),
-                                    ],
-                                  ),
-                                  Text(
-                                    "07:00  09:10   10:00  11:00  12:00  13:00...",
-                                    style: AppFonts.text2,
-                                  ),
+                                        Text(
+                                          state.time,
+                                          style: AppFonts.text2,
+                                        ),
+                                      ],
+                                    ),
+                                  )
                                 ],
                               ),
                             )
                           ],
                         ),
-                      )
-                    ],
-                  ),
-                ),
+                      ),
+                    );
+                  } else if (state is SelectedCityError) {
+                    return Text('Error: ${state.errorText}');
+                  }
+                  return Container(); // Placeholder return statement
+                },
               )
             ],
           ),
