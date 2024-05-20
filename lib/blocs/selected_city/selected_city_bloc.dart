@@ -17,12 +17,13 @@ class SelectedCityBloc extends Bloc<SelectedCityEvent, SelectedCityState> {
       final dio = Dio();
       final response = await dio
           .get('https://run.mocky.io/v3/7e55bf02-89ff-4847-9eb7-7d83ef884017');
-      final data = response.data;
-      final title = data["tickets_offers"][0]["title"];
-      final time = data["tickets_offers"][0]["time_range"].join(' ');
-      final price = data["tickets_offers"][0]["price"]["value"].toString();
-      emit(SelectedCitySuccess(title: title, price: price, time: time));
-      print('Data loaded: $title, $price, $time');
+      final ticket_offers = response.data["tickets_offers"] ?? [];
+      print(ticket_offers);
+      // final title = data["tickets_offers"][0]["title"];
+      // final time = data["tickets_offers"][0]["time_range"].join(' ');
+      // final price = data["tickets_offers"][0]["price"]["value"].toString();
+      emit(SelectedCitySuccess(ticket_offers: ticket_offers));
+      // print('Data loaded: $title, $price, $time');
     } catch (e) {
       emit(SelectedCityError(errorText: e.toString()));
       print('Error loading data: ${e.toString()}');

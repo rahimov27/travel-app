@@ -12,11 +12,15 @@ class SelectedCityPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        automaticallyImplyLeading: false,
+      ),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Container(
                 width: double.infinity,
@@ -96,97 +100,148 @@ class SelectedCityPage extends StatelessWidget {
                   children: [
                     RowChip(
                       text: "обратно",
-                      icon:
-                          "/Users/r27/StudioProjects/travel_app/assets/images/add.svg",
+                      icon: "assets/images/add.svg",
                     )
                   ],
                 ),
               ),
               const SizedBox(height: 12),
-              BlocBuilder<SelectedCityBloc, SelectedCityState>(
-                builder: (context, state) {
-                  if (state is SelectedCityLoading) {
-                    return const CircularProgressIndicator();
-                  } else if (state is SelectedCitySuccess) {
-                    return Container(
-                      width: double.infinity,
-                      height: 238,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(16),
-                        color: const Color(0xff1D1E20),
+              Container(
+                height: 358,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(16),
+                  color: const Color(0xff1D1E20),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Padding(
+                      padding: EdgeInsets.all(16.0),
+                      child: Text(
+                        "Прямые рельсы",
+                        style: AppFonts.title2,
                       ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text(
-                              "Прямые рельсы",
-                              style: AppFonts.title2,
-                            ),
-                            const SizedBox(height: 8),
-                            Container(
-                              decoration: const BoxDecoration(
-                                border: Border.symmetric(),
-                              ),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const CircleAvatar(
-                                    radius: 12,
-                                    backgroundColor: Color(0xffFF5E5E),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(left: 8.0),
+                    ),
+                    Expanded(
+                      child: BlocBuilder<SelectedCityBloc, SelectedCityState>(
+                        builder: (context, state) {
+                          if (state is SelectedCityLoading) {
+                            return const Center(
+                                child: CircularProgressIndicator());
+                          } else if (state is SelectedCitySuccess) {
+                            return ListView.builder(
+                              itemCount: state.ticket_offers.length,
+                              itemBuilder: (context, index) {
+                                final ticket_offer = state.ticket_offers[index];
+                                final id = ticket_offer["id"];
+                                final title = ticket_offer["title"];
+                                final time_range = ticket_offer["time_range"]
+                                    .toString()
+                                    .substring(
+                                        1,
+                                        ticket_offer["time_range"]
+                                                .toString()
+                                                .length -
+                                            1);
+                                final price = ticket_offer["price"]["value"];
+
+                                // Determine the color of CircleAvatar based on the id
+                                Color avatarColor;
+                                if (id == 1) {
+                                  avatarColor = const Color(0xffFF5E5E);
+                                } else if (id == 2) {
+                                  avatarColor =
+                                      Colors.blue; // Set to blue for id 2
+                                } else {
+                                  avatarColor =
+                                      const Color(0xffFF5E5E); // Default color
+                                }
+
+                                return Padding(
+                                  padding: const EdgeInsets.all(16.0),
+                                  child: Container(
+                                    decoration: const BoxDecoration(
+                                      border: Border(
+                                        bottom: BorderSide(
+                                          color: Color(0xff3E3F43),
+                                          width:
+                                              1.0, // Set the width of the bottom border
+                                        ),
+                                      ),
+                                    ),
                                     child: Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
                                         Row(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
                                           children: [
-                                            Text(
-                                              state.title,
-                                              style: AppFonts.title4,
+                                            CircleAvatar(
+                                              radius: 12,
+                                              backgroundColor: avatarColor,
                                             ),
                                             Padding(
                                               padding: const EdgeInsets.only(
-                                                  left: 125),
+                                                  left: 8.0),
                                               child: Text(
-                                                state.price,
-                                                style: const TextStyle(
-                                                  color: Color(0xff2261BC),
-                                                  fontStyle: FontStyle.italic,
-                                                ),
+                                                title,
+                                                style: AppFonts.title4,
                                               ),
+                                            ),
+                                            const Spacer(),
+                                            Text(
+                                              'от ${price.toStringAsFixed(0)} ₽',
+                                              style: AppFonts.text2.copyWith(
+                                                  color:
+                                                      const Color(0xff2261BC)),
                                             ),
                                           ],
                                         ),
+                                        const SizedBox(height: 8.0),
                                         Text(
-                                          state.time,
+                                          subString(time_range.toString()),
                                           style: AppFonts.text2,
                                         ),
+                                        const SizedBox(height: 4.0),
                                       ],
                                     ),
-                                  )
-                                ],
-                              ),
-                            )
-                          ],
+                                  ),
+                                );
+                              },
+                            );
+                          } else if (state is SelectedCityError) {
+                            return Center(
+                                child: Text('Error: ${state.errorText}'));
+                          }
+                          return Container(); // Placeholder return statement
+                        },
+                      ),
+                    ),
+                    Center(
+                      child: TextButton(
+                        onPressed: () {
+                          // Add your onPressed code here
+                        },
+                        child: const Text(
+                          "Показать все",
+                          style: TextStyle(color: Color(0xff2261BC)),
                         ),
                       ),
-                    );
-                  } else if (state is SelectedCityError) {
-                    return Text('Error: ${state.errorText}');
-                  }
-                  return Container(); // Placeholder return statement
-                },
-              )
+                    ),
+                  ],
+                ),
+              ),
             ],
           ),
         ),
       ),
     );
+  }
+
+  String subString(String text) {
+    if (text.length > 20) {
+      return "${text.substring(1, 40)}...";
+    } else {
+      return text;
+    }
   }
 }

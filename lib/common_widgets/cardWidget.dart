@@ -8,7 +8,7 @@ class CardWidget extends StatelessWidget {
     required this.title,
     required this.price,
     required this.town,
-    required this.imagePath, // Add imagePath parameter
+    required this.imagePath,  // Add imagePath parameter
   }) : super(key: key);
 
   final String title;
@@ -34,7 +34,6 @@ class CardWidget extends StatelessWidget {
               child: Image.asset(
                 width: 132,
                 height: 133,
-
                 imagePath, // Use imagePath
                 fit: BoxFit.cover,
               ),
