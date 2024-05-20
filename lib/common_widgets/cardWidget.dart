@@ -5,7 +5,14 @@ import 'package:travel_app/resources/AppFonts.dart';
 class CardWidget extends StatelessWidget {
   const CardWidget({
     super.key,
+    required this.title,
+    required this.price,
+    required this.town
   });
+
+  final String title;
+  final String town;
+  final double price;
 
   @override
   Widget build(BuildContext context) {
@@ -14,14 +21,14 @@ class CardWidget extends StatelessWidget {
       children: [
         Image.asset(
             "/Users/r27/StudioProjects/travel_app/assets/images/girl.png"),
-        const Text(
-          "Die Antwoord",
+        Text(
+          title,
           style: AppFonts.title3,
         ),
-        const Padding(
+        Padding(
           padding: EdgeInsets.only(top: 8.0),
           child: Text(
-            "Будапешт",
+            town,
             style: AppFonts.text2,
           ),
         ),
@@ -32,8 +39,8 @@ class CardWidget extends StatelessWidget {
             children: [
               SvgPicture.asset(
                   "/Users/r27/StudioProjects/travel_app/assets/images/svgBottom/plane.svg"),
-              const Text(
-                "от 22 264 ₽",
+              Text(
+                "от $price ₽",
                 style: AppFonts.text2,
               ),
             ],
