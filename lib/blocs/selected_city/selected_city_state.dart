@@ -3,7 +3,9 @@ part of 'selected_city_bloc.dart';
 @immutable
 abstract class SelectedCityState {}
 
-class SelectedCityInitial extends SelectedCityState {}
+class SelectedCityInitial extends SelectedCityState {
+  
+}
 
 class SelectedCityLoading extends SelectedCityState {}
 

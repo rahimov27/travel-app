@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:travel_app/blocs/selected_city/selected_city_bloc.dart';
 import 'package:travel_app/common_widgets/bottomWidget.dart';
 import 'package:travel_app/common_widgets/cityWidget.dart';
 import 'package:travel_app/resources/AppFonts.dart';
@@ -158,6 +160,8 @@ class SearchBar extends StatelessWidget {
                       children: [
                         InkWell(
                           onTap: () {
+                            BlocProvider.of<SelectedCityBloc>(context)
+                                .add(LoadSelectedCity());
                             Navigator.push(
                               context,
                               MaterialPageRoute(

@@ -183,8 +183,8 @@ class HomePage extends StatelessWidget {
                   onPressed: () {
                     // BlocProvider.of<FirstEnterBloc>(context)
                     //     .add(ShowMainCardEvent());
-                    BlocProvider.of<SelectedCityBloc>(context)
-                        .add(LoadSelectedCity());
+                    // BlocProvider.of<SelectedCityBloc>(context)
+                    //     .add(LoadSelectedCity());
                   },
                   child: const Text(
                     "Показать все места",
