@@ -2,13 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:travel_app/blocs/first_enter/first_enter_bloc.dart';
-import 'package:travel_app/blocs/selected_city/selected_city_bloc.dart';
 import 'package:travel_app/common_widgets/cardWidget.dart';
 import 'package:travel_app/common_widgets/modalSheetWidget.dart';
 import 'package:travel_app/resources/AppFonts.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
+
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  @override
+  void initState() {
+    super.initState();
+    // Dispatch the event to fetch data when the widget is initialized
+    context.read<FirstEnterBloc>().add(ShowMainCardEvent());
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -110,64 +121,42 @@ class HomePage extends StatelessWidget {
               "Музыкально отлететь",
               style: AppFonts.title1,
             ),
-            const SizedBox(height: 25),
-            BlocBuilder<FirstEnterBloc, FirstEnterState>(
-              builder: (context, state) {
-                if (state is FirstEnterLoading) {
-                  return const Center(child: CircularProgressIndicator());
-                } else if (state is FirstEnterSuccess) {
-                  return Expanded(
-                    child: ListView.builder(
+            SizedBox(
+              height: 250, // Adjust the height as needed
+              child: BlocBuilder<FirstEnterBloc, FirstEnterState>(
+                builder: (context, state) {
+                  if (state is FirstEnterLoading) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (state is FirstEnterSuccess) {
+                    return ListView.builder(
                       scrollDirection: Axis.horizontal,
-                      itemCount: state.data.length,
+                      itemCount: state.offers.length,
                       itemBuilder: (context, index) {
-                        final item = state.data[index];
+                        final offer = state.offers[index];
+                        final title = offer['title'] ?? "Unknown Title";
+                        final town = offer['town'] ?? "Unknown Town";
+                        final price = offer['price'] != null
+                            ? (offer['price']['value'] ?? 0).toDouble()
+                            : 0.0;
+
                         return Padding(
-                          padding: const EdgeInsets.only(right: 67.0),
+                          padding: const EdgeInsets.only(right: 8.0),
                           child: CardWidget(
-                            title: item['title'],
-                            town: item['town'],
-                            price: item['price'],
+                            title: title,
+                            price: price,
+                            town: town,
                           ),
                         );
                       },
-                    ),
+                    );
+                  } else if (state is FirstEnterError) {
+                    return Center(child: Text('Error: ${state.errorText}'));
+                  }
+                  return const Center(
+                    child: Text('Press the button to load offers'),
                   );
-                } else if (state is FirstEnterError) {
-                  return Center(child: Text(state.errorText));
-                }
-                return const SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.only(right: 67.0),
-                        child: CardWidget(
-                          title: "Die Antwoord",
-                          town: "Будапешт",
-                          price: 5000,
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(right: 67.0),
-                        child: CardWidget(
-                          title: "Die Antwoord",
-                          town: "Будапешт",
-                          price: 5000,
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(right: 67.0),
-                        child: CardWidget(
-                          title: "Die Antwoord",
-                          town: "Будапешт",
-                          price: 5000,
-                        ),
-                      ),
-                    ],
-                  ),
-                );
-              },
+                },
+              ),
             ),
             Padding(
               padding: const EdgeInsets.only(top: 15.84),
@@ -181,10 +170,8 @@ class HomePage extends StatelessWidget {
                     backgroundColor: const Color(0xff2F3035),
                   ),
                   onPressed: () {
-                    // BlocProvider.of<FirstEnterBloc>(context)
-                    //     .add(ShowMainCardEvent());
-                    // BlocProvider.of<SelectedCityBloc>(context)
-                    //     .add(LoadSelectedCity());
+                    BlocProvider.of<FirstEnterBloc>(context)
+                        .add(ShowMainCardEvent());
                   },
                   child: const Text(
                     "Показать все места",

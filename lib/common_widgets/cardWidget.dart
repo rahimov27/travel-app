@@ -4,11 +4,11 @@ import 'package:travel_app/resources/AppFonts.dart';
 
 class CardWidget extends StatelessWidget {
   const CardWidget({
-    super.key,
+    Key? key,
     required this.title,
     required this.price,
-    required this.town
-  });
+    required this.town,
+  }) : super(key: key);
 
   final String title;
   final String town;
@@ -16,37 +16,43 @@ class CardWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Image.asset(
-            "/Users/r27/StudioProjects/travel_app/assets/images/girl.png"),
-        Text(
-          title,
-          style: AppFonts.title3,
-        ),
-        Padding(
-          padding: EdgeInsets.only(top: 8.0),
-          child: Text(
-            town,
+    return Padding(
+      padding: const EdgeInsets.all(12.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Image.asset(
+            'assets/images/girl.png', // Use relative path
+            fit: BoxFit.cover,
+          ),
+          const SizedBox(height: 8.0),
+          Text(
+            title.isNotEmpty ? title : "Unknown Title", // Default value
+            style: AppFonts.title3,
+          ),
+          const SizedBox(height: 8.0),
+          Text(
+            town.isNotEmpty ? town : "Unknown Town", // Default value
             style: AppFonts.text2,
           ),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(top: 4.0),
-          child: Row(
+          const SizedBox(height: 4.0),
+          Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               SvgPicture.asset(
-                  "/Users/r27/StudioProjects/travel_app/assets/images/svgBottom/plane.svg"),
+                '/Users/r27/StudioProjects/travel_app/assets/images/svgBottom/plane.svg', // Use relative path
+                height: 24.0,
+                width: 24.0,
+              ),
+              const SizedBox(width: 8.0),
               Text(
-                "от $price ₽",
+                "от ${price.toStringAsFixed(0)} ₽", // Format price as int
                 style: AppFonts.text2,
               ),
             ],
           ),
-        )
-      ],
+        ],
+      ),
     );
   }
 }

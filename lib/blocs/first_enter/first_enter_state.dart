@@ -1,20 +1,20 @@
 part of 'first_enter_bloc.dart';
 
 @immutable
-sealed class FirstEnterState {}
+abstract class FirstEnterState {}
 
-final class FirstEnterInitial extends FirstEnterState {}
-
-final class SelectedCityInitial extends FirstEnterState {}
+class FirstEnterInitial extends FirstEnterState {}
 
 class FirstEnterLoading extends FirstEnterState {}
 
 class FirstEnterSuccess extends FirstEnterState {
-  final List<dynamic> data; // Adjust type based on your actual data structure
-  FirstEnterSuccess({required this.data});
+  final List<dynamic> offers;
+
+  FirstEnterSuccess({required this.offers});
 }
 
 class FirstEnterError extends FirstEnterState {
   final String errorText;
+
   FirstEnterError({required this.errorText});
 }
