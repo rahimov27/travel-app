@@ -1,4 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:travel_app/resources/AppFonts.dart';
 
 class TicketDisplay extends StatelessWidget {
@@ -54,16 +57,92 @@ class TicketDisplay extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text(
-              'Departure Date: ${departureDate.toString()}',
-              style: AppFonts.text2,
-            ),
-            // Add more details as needed
-          ],
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Container(
+                width: double.infinity,
+                height: 293,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8),
+                  color: const Color(0xff1D1E20),
+                ),
+                child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        badge,
+                        style: AppFonts.title3,
+                      ),
+                      const SizedBox(height: 16),
+                      Row(
+                        children: [
+                          SvgPicture.asset(hasHandLuggage
+                              ? "/Users/r27/StudioProjects/travel_app/assets/images/checked.svg"
+                              : "/Users/r27/StudioProjects/travel_app/assets/images/close.svg"),
+                          Text(
+                            "Ручная кладь ${hasHandLuggage ? "" : ""}",
+                            style: AppFonts.text2,
+                          ),
+                          const Spacer(),
+                          Text(
+                            handLuggageSize,
+                            style: AppFonts.text2
+                                .copyWith(color: const Color(0xff5E5F61)),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          SvgPicture.asset(hasLuggage
+                              ? "/Users/r27/StudioProjects/travel_app/assets/images/checked.svg"
+                              : "/Users/r27/StudioProjects/travel_app/assets/images/close.svg"),
+                          Text(
+                            hasLuggage ? "С багажом" : "Без багажа",
+                            style: AppFonts.text2,
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          SvgPicture.asset(isExchangable
+                              ? "/Users/r27/StudioProjects/travel_app/assets/images/checked.svg"
+                              : "/Users/r27/StudioProjects/travel_app/assets/images/close.svg"),
+                          Text(
+                            isExchangable
+                                ? "Обмен платный"
+                                : "Обмен бесплатный",
+                            style: AppFonts.text2,
+                          ),
+                          SvgPicture.asset(
+                              "/Users/r27/StudioProjects/travel_app/assets/images/question.svg"),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          SvgPicture.asset(isReturnable
+                              ? "/Users/r27/StudioProjects/travel_app/assets/images/checked.svg"
+                              : "/Users/r27/StudioProjects/travel_app/assets/images/close.svg"),
+                          Text(
+                            isReturnable ? "С возвратом" : "Без возврата",
+                            style: AppFonts.text2,
+                          ),
+                          SvgPicture.asset(
+                              "/Users/r27/StudioProjects/travel_app/assets/images/question.svg"),
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );
