@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:travel_app/blocs/first_enter/first_enter_bloc.dart';
+import 'package:travel_app/common_widgets/buttonWidget.dart';
 import 'package:travel_app/common_widgets/cardWidget.dart';
 import 'package:travel_app/common_widgets/modalSheetWidget.dart';
 import 'package:travel_app/resources/AppFonts.dart';
@@ -176,26 +177,11 @@ class _HomePageState extends State<HomePage> {
                 },
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.only(top: 15.84),
-              child: SizedBox(
-                height: 42,
-                width: double.infinity,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8)),
-                    backgroundColor: const Color(0xff2F3035),
-                  ),
-                  onPressed: () {
-                    BlocProvider.of<FirstEnterBloc>(context)
-                        .add(ShowMainCardEvent());
-                  },
-                  child: const Text(
-                    "Показать все места",
-                    style: AppFonts.buttonText1,
-                  ),
-                ),
+            const Padding(
+              padding: EdgeInsets.only(top: 15.84),
+              child: ButtonWidget(
+                color: Color(0xff2F3035),
+                text: "Показать все места",
               ),
             ),
           ],

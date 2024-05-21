@@ -2,9 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:travel_app/blocs/see_all_tickets/see_all_tickets_bloc.dart';
 import 'package:travel_app/blocs/selected_city/selected_city_bloc.dart';
+import 'package:travel_app/common_widgets/buttonWidget.dart';
 import 'package:travel_app/common_widgets/rowChipWidget.dart';
 import 'package:travel_app/resources/AppFonts.dart';
+import 'package:travel_app/ui/firstPage.dart';
+import 'package:travel_app/ui/seeAlltickets.dart';
 
 class SelectedCityPage extends StatelessWidget {
   const SelectedCityPage({super.key});
@@ -230,6 +234,38 @@ class SelectedCityPage extends StatelessWidget {
                   ],
                 ),
               ),
+              const SizedBox(
+                height: 23,
+              ),
+              SizedBox(
+                height: 42,
+                width: double.infinity,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    backgroundColor: Color(0xff2261BC),
+                  ),
+                  onPressed: () {
+                    // Dispatch the event to load all tickets
+                    BlocProvider.of<SeeAllTicketsBloc>(context)
+                        .add(SeeAllTicketEvent());
+
+                    // Navigate to the SeeAllTickets page
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const SeeAllTickets(),
+                      ),
+                    );
+                  },
+                  child: const Text(
+                    "Посмотреть все билеты",
+                    style: AppFonts.buttonText1,
+                  ),
+                ),
+              )
             ],
           ),
         ),

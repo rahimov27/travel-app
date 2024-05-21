@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg_icons/flutter_svg_icons.dart';
 import 'package:travel_app/blocs/first_enter/first_enter_bloc.dart';
+import 'package:travel_app/blocs/see_all_tickets/see_all_tickets_bloc.dart';
 import 'package:travel_app/blocs/selected_city/selected_city_bloc.dart';
 import 'package:travel_app/ui/emptyScreen.dart';
 import 'package:travel_app/ui/firstPage.dart';
@@ -13,7 +14,9 @@ void main() {
         BlocProvider<FirstEnterBloc>(
           create: (context) => FirstEnterBloc(),
         ),
-        BlocProvider<SelectedCityBloc>(create: (context) => SelectedCityBloc())
+        BlocProvider<SelectedCityBloc>(create: (context) => SelectedCityBloc()),
+        BlocProvider<SeeAllTicketsBloc>(
+            create: (context) => SeeAllTicketsBloc())
       ],
       child: MaterialApp(
         theme: ThemeData(
