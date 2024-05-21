@@ -53,7 +53,8 @@ class ModalBottomSheetSearch extends StatelessWidget {
                   ],
                 ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 21.0, vertical: 30),
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 21.0, vertical: 30),
                   child: Container(
                     width: double.infinity,
                     height: 216,
@@ -164,12 +165,13 @@ class _SearchBarState extends State<SearchBar> {
                             child: TextField(
                               inputFormatters: [
                                 FilteringTextInputFormatter.allow(
-                                  RegExp(r'[а-яА-Я\s]'), // Only allow Cyrillic characters and whitespace
+                                  RegExp(
+                                      r'[а-яА-Я\s]'), // Only allow Cyrillic characters and whitespace
                                 ),
                               ],
                               decoration: InputDecoration(
                                 hintText: cityHintText,
-                                hintStyle: AppFonts.minsk,
+                                hintStyle: AppFonts.text1,
                               ),
                             ),
                           ),
@@ -180,7 +182,8 @@ class _SearchBarState extends State<SearchBar> {
                       children: [
                         InkWell(
                           onTap: () {
-                            BlocProvider.of<SelectedCityBloc>(context).add(LoadSelectedCity());
+                            BlocProvider.of<SelectedCityBloc>(context)
+                                .add(LoadSelectedCity());
                             Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -201,10 +204,11 @@ class _SearchBarState extends State<SearchBar> {
                             child: Align(
                               alignment: Alignment.centerLeft,
                               child: TextField(
-                                style: AppFonts.minsk,
+                                style: AppFonts.text1,
                                 inputFormatters: [
                                   FilteringTextInputFormatter.allow(
-                                    RegExp(r'[а-яА-Я\s]'), // Only allow Cyrillic characters and whitespace
+                                    RegExp(
+                                        r'[а-яА-Я\s]'), // Only allow Cyrillic characters and whitespace
                                   ),
                                 ],
                                 decoration: InputDecoration(

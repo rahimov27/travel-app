@@ -21,7 +21,7 @@ class _SelectedCityPageState extends State<SelectedCityPage> {
   final TextEditingController turkeyController = TextEditingController();
   final TextEditingController minskController = TextEditingController();
   late SharedPreferences prefs;
-  
+
   DateTime selectedDate =
       DateTime.now(); // Добавляем переменную для хранения выбранной даты
 
@@ -117,7 +117,7 @@ class _SelectedCityPageState extends State<SelectedCityPage> {
                                       ],
                                       decoration: const InputDecoration(
                                         hintText: "Минск",
-                                        hintStyle: AppFonts.minsk,
+                                        hintStyle: AppFonts.text1,
                                       ),
                                     ),
                                   ),
@@ -137,7 +137,7 @@ class _SelectedCityPageState extends State<SelectedCityPage> {
                                       alignment: Alignment.centerLeft,
                                       child: TextField(
                                         controller: turkeyController,
-                                        style: AppFonts.minsk,
+                                        style: AppFonts.text1,
                                         inputFormatters: [
                                           FilteringTextInputFormatter.allow(
                                             RegExp(r'[а-яА-Я\s]'),

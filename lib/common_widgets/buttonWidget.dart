@@ -23,7 +23,8 @@ class ButtonWidget extends StatelessWidget {
         },
         child: Text(
           text,
-          style: AppFonts.buttonText1,
+          style: AppFonts.buttonText1.copyWith(
+              fontStyle: FontStyle.italic, fontWeight: FontWeight.normal),
         ),
       ),
     );
