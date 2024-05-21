@@ -30,25 +30,33 @@ class ModalBottomSheetSearch extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    BottomCardWidget(
-                      text: "Сложный маршрут",
-                      icon: "assets/images/marshrut.svg",
-                      color: Color(0xff3A633B),
+                    Expanded(
+                      child: BottomCardWidget(
+                        text: "Сложный маршрут",
+                        icon: "assets/images/marshrut.svg",
+                        color: Color(0xff3A633B),
+                      ),
                     ),
-                    BottomCardWidget(
-                      color: Color(0xff2261BC),
-                      icon: "assets/images/world.svg",
-                      text: "Куда угодно",
+                    Expanded(
+                      child: BottomCardWidget(
+                        color: Color(0xff2261BC),
+                        icon: "assets/images/world.svg",
+                        text: "Куда угодно",
+                      ),
                     ),
-                    BottomCardWidget(
-                      color: Color(0xff00427D),
-                      icon: "assets/images/calendar.svg",
-                      text: "Выходные",
+                    Expanded(
+                      child: BottomCardWidget(
+                        color: Color(0xff00427D),
+                        icon: "assets/images/calendar.svg",
+                        text: "Выходные",
+                      ),
                     ),
-                    BottomCardWidget(
-                      color: Color(0xffFF5E5E),
-                      icon: "assets/images/fire.svg",
-                      text: "Горячие билеты",
+                    Expanded(
+                      child: BottomCardWidget(
+                        color: Color(0xffFF5E5E),
+                        icon: "assets/images/fire.svg",
+                        text: "Горячие билеты",
+                      ),
                     ),
                   ],
                 ),
@@ -160,7 +168,8 @@ class _SearchBarState extends State<SearchBar> {
                         Padding(
                           padding: const EdgeInsets.only(left: 8.0),
                           child: SizedBox(
-                            width: 290,
+                            width:
+                                250, // Adjusted width to fit within the parent
                             height: 42,
                             child: TextField(
                               inputFormatters: [
@@ -200,7 +209,7 @@ class _SearchBarState extends State<SearchBar> {
                           padding: const EdgeInsets.only(left: 8.0),
                           child: SizedBox(
                             height: 32,
-                            width: 290,
+                            width: 150,
                             child: Align(
                               alignment: Alignment.centerLeft,
                               child: TextField(

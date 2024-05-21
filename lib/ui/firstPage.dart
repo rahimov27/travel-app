@@ -176,39 +176,47 @@ class _HomePageState extends State<HomePage> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                InkWell(
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
-                  child: const BottomCardWidget(
-                    text: "Сложный маршрут",
-                    icon: "assets/images/marshrut.svg",
-                    color: Color(0xff3A633B),
+                Expanded(
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                    child: const BottomCardWidget(
+                      text: "Сложный маршрут",
+                      icon: "assets/images/marshrut.svg",
+                      color: Color(0xff3A633B),
+                    ),
                   ),
                 ),
-                const BottomCardWidget(
-                  color: Color(0xff2261BC),
-                  icon: "assets/images/world.svg",
-                  text: "Куда угодно",
-                ),
-                InkWell(
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
+                Expanded(
                   child: const BottomCardWidget(
-                    color: Color(0xff00427D),
-                    icon: "assets/images/calendar.svg",
-                    text: "Выходные",
+                    color: Color(0xff2261BC),
+                    icon: "assets/images/world.svg",
+                    text: "Куда угодно",
                   ),
                 ),
-                InkWell(
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
-                  child: const BottomCardWidget(
-                    color: Color(0xffFF5E5E),
-                    icon: "assets/images/fire.svg",
-                    text: "Горячие билеты",
+                Expanded(
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                    child: const BottomCardWidget(
+                      color: Color(0xff00427D),
+                      icon: "assets/images/calendar.svg",
+                      text: "Выходные",
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                    child: const BottomCardWidget(
+                      color: Color(0xffFF5E5E),
+                      icon: "assets/images/fire.svg",
+                      text: "Горячие билеты",
+                    ),
                   ),
                 ),
               ],
@@ -272,11 +280,16 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+
     return Scaffold(
       body: Center(
         child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 28),
+            padding: EdgeInsets.symmetric(
+              horizontal: screenWidth * 0.05, // Responsive horizontal padding
+              vertical: 28,
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -293,7 +306,6 @@ class _HomePageState extends State<HomePage> {
                 Padding(
                   padding: const EdgeInsets.only(top: 36.0),
                   child: Container(
-                    height: 122,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(16),
                       color: const Color(
@@ -303,8 +315,6 @@ class _HomePageState extends State<HomePage> {
                     child: Padding(
                       padding: const EdgeInsets.all(16.0),
                       child: Container(
-                        width: double.infinity,
-                        height: 90,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(16),
                           color: const Color(
@@ -316,65 +326,66 @@ class _HomePageState extends State<HomePage> {
                               padding: EdgeInsets.only(left: 8),
                               child: ModalBottomSheetSearch(),
                             ),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 16),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  SizedBox(
-                                    width: 290,
-                                    height: 42,
-                                    child: TextField(
-                                      controller: minskController,
-                                      style: AppFonts.text1,
-                                      inputFormatters: [
-                                        FilteringTextInputFormatter.allow(
-                                          RegExp(
-                                              r'[а-яА-Я\s]'), // Only allow Cyrillic characters and whitespace
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.only(left: 16),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    SizedBox(
+                                      height: 42,
+                                      child: TextField(
+                                        controller: minskController,
+                                        style: AppFonts.text1,
+                                        inputFormatters: [
+                                          FilteringTextInputFormatter.allow(
+                                            RegExp(
+                                                r'[а-яА-Я\s]'), // Only allow Cyrillic characters and whitespace
+                                          ),
+                                        ],
+                                        decoration: const InputDecoration(
+                                          hintText: "Минск",
+                                          hintStyle: AppFonts.buttonText1,
                                         ),
-                                      ],
-                                      decoration: const InputDecoration(
-                                        hintText: "Минск",
-                                        hintStyle: AppFonts.buttonText1,
-                                      ),
-                                      onSubmitted: (value) {
-                                        _saveCity();
-                                      },
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: 32,
-                                    width: 290,
-                                    child: Align(
-                                      alignment: Alignment.centerLeft,
-                                      child: GestureDetector(
-                                        onTap: () {
-                                          _showModalBottomSheet(context);
+                                        onSubmitted: (value) {
+                                          _saveCity();
                                         },
-                                        child: AbsorbPointer(
-                                          child: TextField(
-                                            controller: turkeyController,
-                                            style: AppFonts.turkish,
-                                            inputFormatters: [
-                                              FilteringTextInputFormatter.allow(
-                                                RegExp(
-                                                    r'[а-яА-Я\s]'), // Only allow Cyrillic characters and whitespace
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 32,
+                                      child: Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: GestureDetector(
+                                          onTap: () {
+                                            _showModalBottomSheet(context);
+                                          },
+                                          child: AbsorbPointer(
+                                            child: TextField(
+                                              controller: turkeyController,
+                                              style: AppFonts.turkish,
+                                              inputFormatters: [
+                                                FilteringTextInputFormatter
+                                                    .allow(
+                                                  RegExp(
+                                                      r'[а-яА-Я\s]'), // Only allow Cyrillic characters and whitespace
+                                                ),
+                                              ],
+                                              decoration: const InputDecoration(
+                                                border: InputBorder.none,
+                                                hintText: "Куда - Турция",
+                                                hintStyle: AppFonts.turkish,
                                               ),
-                                            ],
-                                            decoration: const InputDecoration(
-                                              border: InputBorder.none,
-                                              hintText: "Куда - Турция",
-                                              hintStyle: AppFonts.turkish,
+                                              onSubmitted: (value) {
+                                                _saveCity();
+                                              },
                                             ),
-                                            onSubmitted: (value) {
-                                              _saveCity();
-                                            },
                                           ),
                                         ),
                                       ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
                             ),
                           ],
@@ -442,8 +453,6 @@ class _HomePageState extends State<HomePage> {
                   child: ButtonWidget(
                     color: Color(0xff2F3035),
                     text: "Показать все места",
-                    
-                    
                   ),
                 ),
               ],

@@ -177,46 +177,55 @@ class SeeAllTickets extends StatelessWidget {
                                   radius: 12,
                                   backgroundColor: Color(0xffFF5E5E),
                                 ),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      "${DateFormat.Hm().format(departureDate)} -",
-                                      style: AppFonts.title4,
-                                    ),
-                                    Text(
-                                      departureAirport,
-                                      style: AppFonts.text2,
-                                    ),
-                                  ],
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "${DateFormat.Hm().format(departureDate)} -",
+                                        style: AppFonts.title4,
+                                      ),
+                                      Text(
+                                        departureAirport,
+                                        style: AppFonts.text2,
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      "- ${DateFormat.Hm().format(arrivalDate)}",
-                                      style: AppFonts.title4,
-                                    ),
-                                    Text(
-                                      arrivalAirport,
-                                      style: AppFonts.text2,
-                                    ),
-                                  ],
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "- ${DateFormat.Hm().format(arrivalDate)}",
+                                        style: AppFonts.title4,
+                                      ),
+                                      Text(
+                                        arrivalAirport,
+                                        style: AppFonts.text2,
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      "$formattedDurationч в пути/",
-                                      style: AppFonts.text2,
-                                    ),
-                                    Text(
-                                      hasVisaTransfer
-                                          ? 'С пересадками'
-                                          : 'Без пересадок',
-                                      style: AppFonts.text2,
-                                    ),
-                                  ],
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "$formattedDurationч в пути/",
+                                        style: AppFonts.text2,
+                                      ),
+                                      Text(
+                                        hasVisaTransfer
+                                            ? 'С пересадками'
+                                            : 'Без пересадок',
+                                        style: AppFonts.text2,
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ],
                             ),

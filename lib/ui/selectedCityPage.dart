@@ -106,7 +106,7 @@ class _SelectedCityPageState extends State<SelectedCityPage> {
                               Row(
                                 children: [
                                   SizedBox(
-                                    width: 290,
+                                    width: 240, // Adjusted width
                                     height: 42,
                                     child: TextField(
                                       controller: minskController,
@@ -132,7 +132,7 @@ class _SelectedCityPageState extends State<SelectedCityPage> {
                                 children: [
                                   SizedBox(
                                     height: 32,
-                                    width: 290,
+                                    width: 240, // Adjusted width
                                     child: Align(
                                       alignment: Alignment.centerLeft,
                                       child: TextField(
