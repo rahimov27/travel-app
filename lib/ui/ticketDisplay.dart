@@ -55,7 +55,18 @@ class TicketDisplay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        actions: [
+          SvgPicture.asset(
+              "/Users/r27/StudioProjects/travel_app/assets/images/push.svg"),
+          Padding(
+            padding: const EdgeInsets.only(left: 6),
+            child: SvgPicture.asset(
+                "/Users/r27/StudioProjects/travel_app/assets/images/share.svg"),
+          ),
+        ],
+      ),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(16.0),

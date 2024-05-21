@@ -18,6 +18,7 @@ class modalBottomSheetSearch extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
+        
         showBarModalBottomSheet(
           backgroundColor: const Color(0xff242529),
           context: context,
