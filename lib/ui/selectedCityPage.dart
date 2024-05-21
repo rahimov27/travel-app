@@ -11,7 +11,7 @@ import 'package:travel_app/resources/AppFonts.dart';
 import 'package:travel_app/ui/seeAlltickets.dart';
 
 class SelectedCityPage extends StatefulWidget {
-  const SelectedCityPage({super.key});
+  const SelectedCityPage({Key? key}) : super(key: key);
 
   @override
   _SelectedCityPageState createState() => _SelectedCityPageState();
@@ -21,6 +21,9 @@ class _SelectedCityPageState extends State<SelectedCityPage> {
   final TextEditingController turkeyController = TextEditingController();
   final TextEditingController minskController = TextEditingController();
   late SharedPreferences prefs;
+  
+  DateTime selectedDate =
+      DateTime.now(); // Добавляем переменную для хранения выбранной даты
 
   @override
   void initState() {
@@ -52,6 +55,20 @@ class _SelectedCityPageState extends State<SelectedCityPage> {
     final DateTime now = DateTime.now();
     final DateFormat formatter = DateFormat('yyyy-MM-dd HH:mm:ss');
     return formatter.format(now);
+  }
+
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime.now(),
+      lastDate: DateTime(2101),
+    );
+    if (picked != null) {
+      setState(() {
+        selectedDate = picked; // Обновляем выбранную дату
+      });
+    }
   }
 
   @override
@@ -104,7 +121,6 @@ class _SelectedCityPageState extends State<SelectedCityPage> {
                                       ),
                                     ),
                                   ),
-                                  // This change button
                                   IconButton(
                                     onPressed: _swapTextFields,
                                     icon: SvgPicture.asset(
@@ -151,22 +167,26 @@ class _SelectedCityPageState extends State<SelectedCityPage> {
                 scrollDirection: Axis.horizontal,
                 child: Row(
                   children: [
-                    const RowChip(
+                    RowChip(
                       text: "обратно",
                       icon: "assets/images/add.svg",
+                      onPressed: () => _selectDate(context),
                     ),
                     RowChip(
                       text: getCurrentDateTime().substring(5, 10),
                       icon: "assets/images/add.svg",
+                      onPressed: () {},
                     ),
-                    const RowChip(
+                    RowChip(
                       text: "1,Эконом",
                       icon:
                           "/Users/r27/StudioProjects/travel_app/assets/images/svgBottom/profile.svg",
+                      onPressed: () {},
                     ),
-                    const RowChip(
+                    RowChip(
                       text: "обратно",
                       icon: "assets/images/add.svg",
+                      onPressed: () {},
                     ),
                   ],
                 ),
@@ -204,22 +224,21 @@ class _SelectedCityPageState extends State<SelectedCityPage> {
                                 final time_range = ticket_offer["time_range"]
                                     .toString()
                                     .substring(
-                                        1,
-                                        ticket_offer["time_range"]
-                                                .toString()
-                                                .length -
-                                            1);
+                                      1,
+                                      ticket_offer["time_range"]
+                                              .toString()
+                                              .length -
+                                          1,
+                                    );
                                 final price = ticket_offer["price"]["value"];
                                 // Determine the color of CircleAvatar based on the id
                                 Color avatarColor;
                                 if (id == 1) {
                                   avatarColor = const Color(0xffFF5E5E);
                                 } else if (id == 2) {
-                                  avatarColor =
-                                      Colors.blue; // Set to blue for id 2
+                                  avatarColor = Colors.blue;
                                 } else {
-                                  avatarColor =
-                                      const Color(0xffFF5E5E); // Default color
+                                  avatarColor = const Color(0xffFF5E5E);
                                 }
                                 return Padding(
                                   padding: const EdgeInsets.all(16.0),
@@ -228,8 +247,7 @@ class _SelectedCityPageState extends State<SelectedCityPage> {
                                       border: Border(
                                         bottom: BorderSide(
                                           color: Color(0xff3E3F43),
-                                          width:
-                                              1.0, // Set the width of the bottom border
+                                          width: 1.0,
                                         ),
                                       ),
                                     ),
@@ -255,8 +273,8 @@ class _SelectedCityPageState extends State<SelectedCityPage> {
                                             Text(
                                               'от ${price.toStringAsFixed(0)} ₽',
                                               style: AppFonts.text2.copyWith(
-                                                  color:
-                                                      const Color(0xff2261BC)),
+                                                color: const Color(0xff2261BC),
+                                              ),
                                             ),
                                           ],
                                         ),
@@ -276,7 +294,7 @@ class _SelectedCityPageState extends State<SelectedCityPage> {
                             return Center(
                                 child: Text('Error: ${state.errorText}'));
                           }
-                          return Container(); // Placeholder return statement
+                          return Container();
                         },
                       ),
                     ),
@@ -314,7 +332,8 @@ class _SelectedCityPageState extends State<SelectedCityPage> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const SeeAllTickets(),
+                        builder: (context) =>
+                            SeeAllTickets(selectedDate: selectedDate),
                       ),
                     );
                   },

@@ -22,20 +22,20 @@ void main() {
         theme: ThemeData(
           scaffoldBackgroundColor: Colors.black,
         ),
-        home: const PagesScreen(),
+        home: const MyApp(),
       ),
     ),
   );
 }
 
-class PagesScreen extends StatefulWidget {
-  const PagesScreen({super.key});
+class MyApp extends StatefulWidget {
+  const MyApp({super.key});
 
   @override
-  State<PagesScreen> createState() => _PagesScreenState();
+  State<MyApp> createState() => _MyAppState();
 }
 
-class _PagesScreenState extends State<PagesScreen> {
+class _MyAppState extends State<MyApp> {
   int currentIndex = 0;
   List<Widget> pages = [
     const HomePage(),

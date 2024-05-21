@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:travel_app/blocs/see_all_tickets/see_all_tickets_bloc.dart';
@@ -7,13 +8,14 @@ import 'package:travel_app/resources/AppFonts.dart';
 import 'package:travel_app/ui/ticketDisplay.dart';
 
 class SeeAllTickets extends StatelessWidget {
-  const SeeAllTickets({Key? key}) : super(key: key);
+  const SeeAllTickets({Key? key, required this.selectedDate}) : super(key: key);
 
+  final DateTime selectedDate;
   Future<String> _loadPreferences() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String city = prefs.getString("city") ?? "Куда - Турция";
     String fromCity = prefs.getString("from_city") ?? "Минск";
-    return '$fromCity -> $city';
+    return '$fromCity- $city';
   }
 
   @override
@@ -29,7 +31,35 @@ class SeeAllTickets extends StatelessWidget {
             } else if (snapshot.hasError) {
               return const Text("Error loading preferences");
             } else {
-              return Text(snapshot.data ?? "");
+              return Container(
+                color: const Color(0xff242529),
+                child: Row(
+                  children: [
+                    IconButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      icon: const Icon(
+                        Icons.arrow_back,
+                        color: Color(0xff2261BC),
+                      ),
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          snapshot.data ?? "",
+                          style: AppFonts.title3,
+                        ),
+                        Text(
+                          "${selectedDate.toString().substring(8, 10)} , 1 пассажир",
+                          style: AppFonts.title4,
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              );
             }
           },
         ),
@@ -68,10 +98,16 @@ class SeeAllTickets extends StatelessWidget {
                 final isReturnable = ticket["is_returnable"] ?? false;
                 final isExchangable = ticket["is_exchangable"] ?? false;
 
+                print("Departure Date String: $departureDateStr");
+                print("Arrival Date String: $arrivalDateStr");
+
                 DateTime departureDate =
                     DateTime.tryParse(departureDateStr) ?? DateTime.now();
                 DateTime arrivalDate =
                     DateTime.tryParse(arrivalDateStr) ?? DateTime.now();
+
+                print("Parsed Departure Date: $departureDate");
+                print("Parsed Arrival Date: $arrivalDate");
 
                 Duration flightDuration = arrivalDate.difference(departureDate);
                 String formattedDuration = formatDuration(flightDuration);
@@ -197,6 +233,47 @@ class SeeAllTickets extends StatelessWidget {
           }
           return const Center(child: Text('No data available'));
         },
+      ),
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(bottom: 16.0),
+        child: Align(
+          alignment: Alignment.bottomCenter,
+          child: SizedBox(
+            width: 203,
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius:
+                    BorderRadius.circular(50), // Adjust the radius as needed
+                color: const Color(0xff2261BC),
+              ),
+              child: FloatingActionButton(
+                onPressed: () {},
+                backgroundColor: Colors.transparent,
+                elevation: 0, // Remove elevation to make it flat
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: Row(
+                    children: [
+                      SvgPicture.asset(
+                          "/Users/r27/StudioProjects/travel_app/assets/images/filter.svg"),
+                      const Text(
+                        "Фильтр",
+                        style: AppFonts.title4,
+                      ),
+                      Spacer(),
+                      SvgPicture.asset(
+                          "/Users/r27/StudioProjects/travel_app/assets/images/graph.svg"),
+                      const Text(
+                        "График цен",
+                        style: AppFonts.title4,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }
