@@ -3,22 +3,20 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:travel_app/blocs/selected_city/selected_city_bloc.dart';
 import 'package:travel_app/common_widgets/bottomWidget.dart';
 import 'package:travel_app/common_widgets/cityWidget.dart';
 import 'package:travel_app/resources/AppFonts.dart';
 import 'package:travel_app/ui/selectedCityPage.dart';
 
-class modalBottomSheetSearch extends StatelessWidget {
-  const modalBottomSheetSearch({
-    super.key,
-  });
+class ModalBottomSheetSearch extends StatelessWidget {
+  const ModalBottomSheetSearch({super.key});
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        
         showBarModalBottomSheet(
           backgroundColor: const Color(0xff242529),
           context: context,
@@ -55,8 +53,7 @@ class modalBottomSheetSearch extends StatelessWidget {
                   ],
                 ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 21.0, vertical: 30),
+                  padding: const EdgeInsets.symmetric(horizontal: 21.0, vertical: 30),
                   child: Container(
                     width: double.infinity,
                     height: 216,
@@ -105,8 +102,31 @@ class modalBottomSheetSearch extends StatelessWidget {
   }
 }
 
-class SearchBar extends StatelessWidget {
+class SearchBar extends StatefulWidget {
   const SearchBar({super.key});
+
+  @override
+  _SearchBarState createState() => _SearchBarState();
+}
+
+class _SearchBarState extends State<SearchBar> {
+  late SharedPreferences prefs;
+  String cityHintText = "Минск";
+  String destinationHintText = "Куда - Турция";
+
+  @override
+  void initState() {
+    super.initState();
+    _initSharedPreferences();
+  }
+
+  Future<void> _initSharedPreferences() async {
+    prefs = await SharedPreferences.getInstance();
+    setState(() {
+      cityHintText = prefs.getString("from_city") ?? "Минск";
+      destinationHintText = prefs.getString("city") ?? "Куда - Турция";
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -144,12 +164,11 @@ class SearchBar extends StatelessWidget {
                             child: TextField(
                               inputFormatters: [
                                 FilteringTextInputFormatter.allow(
-                                  RegExp(
-                                      r'[а-яА-Я\s]'), // Only allow Cyrillic characters and whitespace
+                                  RegExp(r'[а-яА-Я\s]'), // Only allow Cyrillic characters and whitespace
                                 ),
                               ],
-                              decoration: const InputDecoration(
-                                hintText: "Минск",
+                              decoration: InputDecoration(
+                                hintText: cityHintText,
                                 hintStyle: AppFonts.minsk,
                               ),
                             ),
@@ -161,8 +180,7 @@ class SearchBar extends StatelessWidget {
                       children: [
                         InkWell(
                           onTap: () {
-                            BlocProvider.of<SelectedCityBloc>(context)
-                                .add(LoadSelectedCity());
+                            BlocProvider.of<SelectedCityBloc>(context).add(LoadSelectedCity());
                             Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -186,13 +204,12 @@ class SearchBar extends StatelessWidget {
                                 style: AppFonts.minsk,
                                 inputFormatters: [
                                   FilteringTextInputFormatter.allow(
-                                    RegExp(
-                                        r'[а-яА-Я\s]'), // Only allow Cyrillic characters and whitespace
+                                    RegExp(r'[а-яА-Я\s]'), // Only allow Cyrillic characters and whitespace
                                   ),
                                 ],
-                                decoration: const InputDecoration(
+                                decoration: InputDecoration(
                                   border: InputBorder.none,
-                                  hintText: "Куда - Турция",
+                                  hintText: destinationHintText,
                                   hintStyle: AppFonts.turkish,
                                 ),
                               ),

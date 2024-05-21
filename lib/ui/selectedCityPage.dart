@@ -2,16 +2,57 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:travel_app/blocs/see_all_tickets/see_all_tickets_bloc.dart';
 import 'package:travel_app/blocs/selected_city/selected_city_bloc.dart';
-import 'package:travel_app/common_widgets/buttonWidget.dart';
 import 'package:travel_app/common_widgets/rowChipWidget.dart';
 import 'package:travel_app/resources/AppFonts.dart';
-import 'package:travel_app/ui/firstPage.dart';
 import 'package:travel_app/ui/seeAlltickets.dart';
 
-class SelectedCityPage extends StatelessWidget {
+class SelectedCityPage extends StatefulWidget {
   const SelectedCityPage({super.key});
+
+  @override
+  _SelectedCityPageState createState() => _SelectedCityPageState();
+}
+
+class _SelectedCityPageState extends State<SelectedCityPage> {
+  final TextEditingController turkeyController = TextEditingController();
+  final TextEditingController minskController = TextEditingController();
+  late SharedPreferences prefs;
+
+  @override
+  void initState() {
+    super.initState();
+    _initSharedPreferences();
+  }
+
+  Future<void> _initSharedPreferences() async {
+    prefs = await SharedPreferences.getInstance();
+    _loadPreferences();
+  }
+
+  void _loadPreferences() {
+    setState(() {
+      turkeyController.text = prefs.getString("city") ?? "Куда - Турция";
+      minskController.text = prefs.getString("from_city") ?? "Минск";
+    });
+  }
+
+  void _swapTextFields() {
+    setState(() {
+      String temp = turkeyController.text;
+      turkeyController.text = minskController.text;
+      minskController.text = temp;
+    });
+  }
+
+  String getCurrentDateTime() {
+    final DateTime now = DateTime.now();
+    final DateFormat formatter = DateFormat('yyyy-MM-dd HH:mm:ss');
+    return formatter.format(now);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,6 +84,7 @@ class SelectedCityPage extends StatelessWidget {
                         Padding(
                           padding: const EdgeInsets.only(left: 8.0),
                           child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Row(
                                 children: [
@@ -50,6 +92,7 @@ class SelectedCityPage extends StatelessWidget {
                                     width: 290,
                                     height: 42,
                                     child: TextField(
+                                      controller: minskController,
                                       inputFormatters: [
                                         FilteringTextInputFormatter.allow(
                                           RegExp(r'[а-яА-Я\s]'),
@@ -61,7 +104,12 @@ class SelectedCityPage extends StatelessWidget {
                                       ),
                                     ),
                                   ),
-                                  SvgPicture.asset("assets/images/filter.svg")
+                                  // This change button
+                                  IconButton(
+                                    onPressed: _swapTextFields,
+                                    icon: SvgPicture.asset(
+                                        "assets/images/filter.svg"),
+                                  ),
                                 ],
                               ),
                               Row(
@@ -72,6 +120,7 @@ class SelectedCityPage extends StatelessWidget {
                                     child: Align(
                                       alignment: Alignment.centerLeft,
                                       child: TextField(
+                                        controller: turkeyController,
                                         style: AppFonts.minsk,
                                         inputFormatters: [
                                           FilteringTextInputFormatter.allow(
@@ -86,7 +135,7 @@ class SelectedCityPage extends StatelessWidget {
                                       ),
                                     ),
                                   ),
-                                  SvgPicture.asset("assets/images/close.svg")
+                                  SvgPicture.asset("assets/images/close.svg"),
                                 ],
                               ),
                             ],
@@ -98,14 +147,27 @@ class SelectedCityPage extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 21),
-              const SingleChildScrollView(
+              SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Row(
                   children: [
-                    RowChip(
+                    const RowChip(
                       text: "обратно",
                       icon: "assets/images/add.svg",
-                    )
+                    ),
+                    RowChip(
+                      text: getCurrentDateTime().substring(5, 10),
+                      icon: "assets/images/add.svg",
+                    ),
+                    const RowChip(
+                      text: "1,Эконом",
+                      icon:
+                          "/Users/r27/StudioProjects/travel_app/assets/images/svgBottom/profile.svg",
+                    ),
+                    const RowChip(
+                      text: "обратно",
+                      icon: "assets/images/add.svg",
+                    ),
                   ],
                 ),
               ),
@@ -148,7 +210,6 @@ class SelectedCityPage extends StatelessWidget {
                                                 .length -
                                             1);
                                 final price = ticket_offer["price"]["value"];
-
                                 // Determine the color of CircleAvatar based on the id
                                 Color avatarColor;
                                 if (id == 1) {
@@ -160,7 +221,6 @@ class SelectedCityPage extends StatelessWidget {
                                   avatarColor =
                                       const Color(0xffFF5E5E); // Default color
                                 }
-
                                 return Padding(
                                   padding: const EdgeInsets.all(16.0),
                                   child: Container(
@@ -234,9 +294,7 @@ class SelectedCityPage extends StatelessWidget {
                   ],
                 ),
               ),
-              const SizedBox(
-                height: 23,
-              ),
+              const SizedBox(height: 23),
               SizedBox(
                 height: 42,
                 width: double.infinity,
@@ -245,7 +303,7 @@ class SelectedCityPage extends StatelessWidget {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
-                    backgroundColor: Color(0xff2261BC),
+                    backgroundColor: const Color(0xff2261BC),
                   ),
                   onPressed: () {
                     // Dispatch the event to load all tickets
@@ -265,7 +323,7 @@ class SelectedCityPage extends StatelessWidget {
                     style: AppFonts.buttonText1,
                   ),
                 ),
-              )
+              ),
             ],
           ),
         ),

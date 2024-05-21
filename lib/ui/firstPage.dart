@@ -29,9 +29,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    // Initialize SharedPreferences
     _initSharedPreferences();
-    // Dispatch the event to fetch data when the widget is initialized
     context.read<FirstEnterBloc>().add(ShowMainCardEvent());
   }
 
@@ -41,30 +39,23 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _loadPreferences() {
-    if (prefs != null) {
-      setState(() {
-        turkeyController.text = prefs.getString("city") ?? "Куда - Турция";
-        minskController.text = prefs.getString("from_city") ?? "Минск";
-      });
-    }
+    setState(() {
+      turkeyController.text = prefs.getString("city") ?? "Куда - Турция";
+      minskController.text = prefs.getString("from_city") ?? "Минск";
+    });
   }
 
   void _saveCity() {
-    if (prefs != null) {
-      prefs.setString("city", turkeyController.text);
-      prefs.setString("from_city", minskController.text);
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Город успешно сохранен')),
-      );
-    } else {
-      // Handle the case where prefs is not initialized
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Preferences not initialized')),
-      );
-    }
+    prefs.setString("city", turkeyController.text);
+    prefs.setString("from_city", minskController.text);
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Город успешно сохранен')),
+    );
   }
 
   void _showModalBottomSheet(BuildContext context) {
+    _loadPreferences();
+
     showBarModalBottomSheet(
       backgroundColor: const Color(0xff242529),
       context: context,
@@ -146,6 +137,7 @@ class _HomePageState extends State<HomePage> {
                                   child: Align(
                                     alignment: Alignment.centerLeft,
                                     child: TextField(
+                                      controller: turkeyController,
                                       style: AppFonts.minsk,
                                       inputFormatters: [
                                         FilteringTextInputFormatter.allow(
@@ -153,9 +145,10 @@ class _HomePageState extends State<HomePage> {
                                               r'[а-яА-Я\s]'), // Only allow Cyrillic characters and whitespace
                                         ),
                                       ],
-                                      decoration: const InputDecoration(
+                                      decoration: InputDecoration(
                                         border: InputBorder.none,
-                                        hintText: "Куда - Турция",
+                                        hintText: prefs.getString("city") ??
+                                            "Куда - Турция",
                                         hintStyle: AppFonts.turkish,
                                       ),
                                     ),
@@ -163,7 +156,9 @@ class _HomePageState extends State<HomePage> {
                                 ),
                               ),
                               IconButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  turkeyController.clear();
+                                },
                                 icon: SvgPicture.asset(
                                   width: 20,
                                   "assets/images/close.svg",
@@ -178,29 +173,44 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
             ),
-            const Row(
+            Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                BottomCardWidget(
-                  text: "Сложный маршрут",
-                  icon: "assets/images/marshrut.svg",
-                  color: Color(0xff3A633B),
+                InkWell(
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                  child: const BottomCardWidget(
+                    text: "Сложный маршрут",
+                    icon: "assets/images/marshrut.svg",
+                    color: Color(0xff3A633B),
+                  ),
                 ),
-                BottomCardWidget(
+                const BottomCardWidget(
                   color: Color(0xff2261BC),
                   icon: "assets/images/world.svg",
                   text: "Куда угодно",
                 ),
-                BottomCardWidget(
-                  color: Color(0xff00427D),
-                  icon: "assets/images/calendar.svg",
-                  text: "Выходные",
+                InkWell(
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                  child: const BottomCardWidget(
+                    color: Color(0xff00427D),
+                    icon: "assets/images/calendar.svg",
+                    text: "Выходные",
+                  ),
                 ),
-                BottomCardWidget(
-                  color: Color(0xffFF5E5E),
-                  icon: "assets/images/fire.svg",
-                  text: "Горячие билеты",
+                InkWell(
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                  child: const BottomCardWidget(
+                    color: Color(0xffFF5E5E),
+                    icon: "assets/images/fire.svg",
+                    text: "Горячие билеты",
+                  ),
                 ),
               ],
             ),
@@ -214,23 +224,36 @@ class _HomePageState extends State<HomePage> {
                   borderRadius: BorderRadius.circular(16),
                   color: const Color(0xff2F3035),
                 ),
-                child: const Column(
+                child: Column(
                   children: [
                     Padding(
-                      padding: EdgeInsets.all(16.0),
+                      padding: const EdgeInsets.all(16.0),
                       child: Column(
                         children: [
-                          CityWidget(
+                          const CityWidget(
                             title: "Стамбул",
                             image: "assets/images/turkey.png",
                             subtitle: "Популярное направление",
                           ),
-                          CityWidget(
-                            title: "Сочи",
-                            image: "assets/images/sochi.png",
-                            subtitle: "Популярное направление",
+                          InkWell(
+                            onTap: () {
+                              BlocProvider.of<SelectedCityBloc>(context)
+                                  .add(LoadSelectedCity());
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      const SelectedCityPage(),
+                                ),
+                              );
+                            },
+                            child: const CityWidget(
+                              title: "Сочи",
+                              image: "assets/images/sochi.png",
+                              subtitle: "Популярное направление",
+                            ),
                           ),
-                          CityWidget(
+                          const CityWidget(
                             title: "Пхукет",
                             image: "assets/images/phuket.png",
                             subtitle: "Популярное направление",
@@ -294,7 +317,7 @@ class _HomePageState extends State<HomePage> {
                         children: [
                           const Padding(
                             padding: EdgeInsets.only(left: 8),
-                            child: modalBottomSheetSearch(),
+                            child: ModalBottomSheetSearch(),
                           ),
                           Padding(
                             padding: const EdgeInsets.only(left: 16),
@@ -387,7 +410,6 @@ class _HomePageState extends State<HomePage> {
                               ? (offer['price']['value'] ?? 0).toDouble()
                               : 0.0;
 
-                          // Determine the image based on the id
                           String imagePath;
                           if (id == 1) {
                             imagePath = 'assets/images/girl.png';

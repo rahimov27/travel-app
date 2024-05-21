@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:travel_app/blocs/see_all_tickets/see_all_tickets_bloc.dart';
 import 'package:travel_app/resources/AppFonts.dart';
 import 'package:travel_app/ui/ticketDisplay.dart';
@@ -8,22 +9,41 @@ import 'package:travel_app/ui/ticketDisplay.dart';
 class SeeAllTickets extends StatelessWidget {
   const SeeAllTickets({Key? key}) : super(key: key);
 
+  Future<String> _loadPreferences() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String city = prefs.getString("city") ?? "Куда - Турция";
+    String fromCity = prefs.getString("from_city") ?? "Минск";
+    return '$fromCity -> $city';
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("All Tickets"),
+        automaticallyImplyLeading: false,
+        title: FutureBuilder<String>(
+          future: _loadPreferences(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Text("Loading...");
+            } else if (snapshot.hasError) {
+              return const Text("Error loading preferences");
+            } else {
+              return Text(snapshot.data ?? "");
+            }
+          },
+        ),
+        backgroundColor: Colors.transparent,
       ),
       body: BlocBuilder<SeeAllTicketsBloc, SeeAllTicketsState>(
         builder: (context, state) {
           if (state is SeeAllTicketsLoading) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           } else if (state is SeeAllTicketsSuccess) {
             return ListView.builder(
               itemCount: state.all_tickets.length,
               itemBuilder: (context, index) {
                 final ticket = state.all_tickets[index] ?? {};
-                final id = ticket["id"];
                 final badge = ticket["badge"] ?? "No Badge";
                 final price = (ticket["price"]?["value"] ?? 0).toDouble();
                 final providerName = ticket["provider_name"] ?? "Unknown";
@@ -175,7 +195,7 @@ class SeeAllTickets extends StatelessWidget {
           } else if (state is SeeAllTicketsError) {
             return Center(child: Text('Error: ${state.errorText}'));
           }
-          return Center(child: Text('No data available'));
+          return const Center(child: Text('No data available'));
         },
       ),
     );
