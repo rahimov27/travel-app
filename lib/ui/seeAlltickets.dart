@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:travel_app/blocs/see_all_tickets/see_all_tickets_bloc.dart';
+import 'package:travel_app/resources/AppFonts.dart';
 
 class SeeAllTickets extends StatelessWidget {
   const SeeAllTickets({Key? key}) : super(key: key);
@@ -28,10 +30,10 @@ class SeeAllTickets extends StatelessWidget {
                 final departure = ticket["departure"] ?? {};
                 final arrival = ticket["arrival"] ?? {};
                 final departureTown = departure["town"] ?? "Unknown";
-                final departureDate = departure["date"] ?? "Unknown";
+                final departureDateStr = departure["date"] ?? "Unknown";
                 final departureAirport = departure["airport"] ?? "Unknown";
                 final arrivalTown = arrival["town"] ?? "Unknown";
-                final arrivalDate = arrival["date"] ?? "Unknown";
+                final arrivalDateStr = arrival["date"] ?? "Unknown";
                 final arrivalAirport = arrival["airport"] ?? "Unknown";
                 final hasTransfer = ticket["has_transfer"] ?? false;
                 final hasVisaTransfer = ticket["has_visa_transfer"] ?? false;
@@ -44,34 +46,90 @@ class SeeAllTickets extends StatelessWidget {
                 final isReturnable = ticket["is_returnable"] ?? false;
                 final isExchangable = ticket["is_exchangable"] ?? false;
 
+                DateTime departureDate =
+                    DateTime.tryParse(departureDateStr) ?? DateTime.now();
+                DateTime arrivalDate =
+                    DateTime.tryParse(arrivalDateStr) ?? DateTime.now();
+
+                Duration flightDuration = arrivalDate.difference(departureDate);
+                String formattedDuration = formatDuration(flightDuration);
+
                 return Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Card(
+                    color: const Color(0xff1D1E20),
                     child: Padding(
                       padding: const EdgeInsets.all(16.0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            "Company: $company",
-                            style: TextStyle(fontWeight: FontWeight.bold),
+                          Container(
+                            width: 136,
+                            height: 23,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(50),
+                              color: const Color(0xff2261BC),
+                            ),
+                            child: Center(
+                              child: Text(
+                                badge,
+                                style: AppFonts.title4,
+                              ),
+                            ),
                           ),
-                          Text("Provider: $providerName"),
-                          Text("Badge: $badge"),
-                          Text("Price: ${price}₽"),
                           Text(
-                              "Departure: $departureTown ($departureAirport) on $departureDate"),
-                          Text(
-                              "Arrival: $arrivalTown ($arrivalAirport) on $arrivalDate"),
-                          Text("Transfer: ${hasTransfer ? 'Yes' : 'No'}"),
-                          Text(
-                              "Visa Transfer: ${hasVisaTransfer ? 'Yes' : 'No'}"),
-                          Text(
-                              "Luggage: ${hasLuggage ? 'Yes' : 'No'}, Price: ${hasLuggage ? '${luggagePrice}₽' : 'N/A'}"),
-                          Text(
-                              "Hand Luggage: ${hasHandLuggage ? 'Yes' : 'No'}, Size: $handLuggageSize"),
-                          Text("Returnable: ${isReturnable ? 'Yes' : 'No'}"),
-                          Text("Exchangable: ${isExchangable ? 'Yes' : 'No'}"),
+                            "Price: ${price}₽",
+                            style: AppFonts.title1,
+                          ),
+                          Row(
+                            children: [
+                              const CircleAvatar(
+                                radius: 12,
+                                backgroundColor: Color(0xffFF5E5E),
+                              ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "${DateFormat.Hm().format(departureDate)} -",
+                                    style: AppFonts.title4,
+                                  ),
+                                  Text(
+                                    departureAirport,
+                                    style: AppFonts.text2,
+                                  ),
+                                ],
+                              ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "- ${DateFormat.Hm().format(arrivalDate)}",
+                                    style: AppFonts.title4,
+                                  ),
+                                  Text(
+                                    arrivalAirport,
+                                    style: AppFonts.text2,
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "$formattedDurationч в пути/",
+                                    style: AppFonts.text2,
+                                  ),
+                                  Text(
+                                    hasVisaTransfer
+                                        ? 'С пересадками'
+                                        : 'Без пересадок',
+                                    style: AppFonts.text2,
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
                         ],
                       ),
                     ),
@@ -86,5 +144,12 @@ class SeeAllTickets extends StatelessWidget {
         },
       ),
     );
+  }
+
+  String formatDuration(Duration duration) {
+    String twoDigits(int n) => n.toString().padLeft(2, '0');
+    String twoDigitHours = twoDigits(duration.inHours);
+    String twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60));
+    return "$twoDigitHours:$twoDigitMinutes";
   }
 }
